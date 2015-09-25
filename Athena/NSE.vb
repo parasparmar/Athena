@@ -27,6 +27,9 @@ Public Class NSE
         NSEEquityFileName = "cm" & MyDayformat & MyMonthformat & MyYearformat & "bhav.csv.zip"
     End Function
 
+
+
+
     '' Headers to give the webclient
     ''GET /content/historical/EQUITIES/2014/JUL/cm31JUL2014bhav.csv.zip HTTP/1.1
     ''--------------CLIENT-----------------------

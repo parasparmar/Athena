@@ -29,8 +29,6 @@ Partial Class FormMain
         Me.btnSubmit = New System.Windows.Forms.Button()
         Me.dtpToDate = New System.Windows.Forms.DateTimePicker()
         Me.dtpFromDate = New System.Windows.Forms.DateTimePicker()
-        Me.cbDataType = New System.Windows.Forms.ComboBox()
-        Me.cbExchange = New System.Windows.Forms.ComboBox()
         Me.pb1 = New System.Windows.Forms.ProgressBar()
         Me.tbStatusText = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
@@ -39,7 +37,7 @@ Partial Class FormMain
         '
         Me.clbFiles.CheckOnClick = True
         Me.clbFiles.FormattingEnabled = True
-        Me.clbFiles.Location = New System.Drawing.Point(12, 202)
+        Me.clbFiles.Location = New System.Drawing.Point(11, 170)
         Me.clbFiles.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.clbFiles.MultiColumn = True
         Me.clbFiles.Name = "clbFiles"
@@ -48,7 +46,7 @@ Partial Class FormMain
         '
         'btnDownload
         '
-        Me.btnDownload.Location = New System.Drawing.Point(12, 171)
+        Me.btnDownload.Location = New System.Drawing.Point(11, 139)
         Me.btnDownload.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnDownload.Name = "btnDownload"
         Me.btnDownload.Size = New System.Drawing.Size(373, 28)
@@ -59,7 +57,7 @@ Partial Class FormMain
         'btnReset
         '
         Me.btnReset.BackColor = System.Drawing.SystemColors.Window
-        Me.btnReset.Location = New System.Drawing.Point(200, 76)
+        Me.btnReset.Location = New System.Drawing.Point(199, 44)
         Me.btnReset.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(186, 27)
@@ -70,7 +68,7 @@ Partial Class FormMain
         'btnSubmit
         '
         Me.btnSubmit.BackColor = System.Drawing.SystemColors.Window
-        Me.btnSubmit.Location = New System.Drawing.Point(12, 76)
+        Me.btnSubmit.Location = New System.Drawing.Point(11, 44)
         Me.btnSubmit.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnSubmit.Name = "btnSubmit"
         Me.btnSubmit.Size = New System.Drawing.Size(184, 27)
@@ -80,7 +78,7 @@ Partial Class FormMain
         '
         'dtpToDate
         '
-        Me.dtpToDate.Location = New System.Drawing.Point(202, 45)
+        Me.dtpToDate.Location = New System.Drawing.Point(201, 13)
         Me.dtpToDate.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.dtpToDate.Name = "dtpToDate"
         Me.dtpToDate.Size = New System.Drawing.Size(184, 25)
@@ -88,35 +86,15 @@ Partial Class FormMain
         '
         'dtpFromDate
         '
-        Me.dtpFromDate.Location = New System.Drawing.Point(12, 45)
+        Me.dtpFromDate.Location = New System.Drawing.Point(11, 13)
         Me.dtpFromDate.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.dtpFromDate.Name = "dtpFromDate"
         Me.dtpFromDate.Size = New System.Drawing.Size(184, 25)
         Me.dtpFromDate.TabIndex = 14
         '
-        'cbDataType
-        '
-        Me.cbDataType.FormattingEnabled = True
-        Me.cbDataType.Items.AddRange(New Object() {"Equity", "Futures and Options", "Commodities", "Mutual Funds", "Unit Linked Insurance"})
-        Me.cbDataType.Location = New System.Drawing.Point(202, 13)
-        Me.cbDataType.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.cbDataType.Name = "cbDataType"
-        Me.cbDataType.Size = New System.Drawing.Size(184, 25)
-        Me.cbDataType.TabIndex = 13
-        '
-        'cbExchange
-        '
-        Me.cbExchange.FormattingEnabled = True
-        Me.cbExchange.Items.AddRange(New Object() {"NSE", "BSE", "MCX", "NCDEX", "ISE"})
-        Me.cbExchange.Location = New System.Drawing.Point(12, 13)
-        Me.cbExchange.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.cbExchange.Name = "cbExchange"
-        Me.cbExchange.Size = New System.Drawing.Size(184, 25)
-        Me.cbExchange.TabIndex = 12
-        '
         'pb1
         '
-        Me.pb1.Location = New System.Drawing.Point(12, 142)
+        Me.pb1.Location = New System.Drawing.Point(11, 110)
         Me.pb1.Name = "pb1"
         Me.pb1.Size = New System.Drawing.Size(373, 25)
         Me.pb1.TabIndex = 19
@@ -124,7 +102,7 @@ Partial Class FormMain
         'tbStatusText
         '
         Me.tbStatusText.BackColor = System.Drawing.SystemColors.Control
-        Me.tbStatusText.Location = New System.Drawing.Point(12, 110)
+        Me.tbStatusText.Location = New System.Drawing.Point(11, 78)
         Me.tbStatusText.Name = "tbStatusText"
         Me.tbStatusText.Size = New System.Drawing.Size(373, 25)
         Me.tbStatusText.TabIndex = 20
@@ -141,8 +119,6 @@ Partial Class FormMain
         Me.Controls.Add(Me.btnSubmit)
         Me.Controls.Add(Me.dtpToDate)
         Me.Controls.Add(Me.dtpFromDate)
-        Me.Controls.Add(Me.cbDataType)
-        Me.Controls.Add(Me.cbExchange)
         Me.Controls.Add(Me.clbFiles)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
@@ -159,8 +135,6 @@ Partial Class FormMain
     Friend WithEvents btnSubmit As System.Windows.Forms.Button
     Friend WithEvents dtpToDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents dtpFromDate As System.Windows.Forms.DateTimePicker
-    Friend WithEvents cbDataType As System.Windows.Forms.ComboBox
-    Friend WithEvents cbExchange As System.Windows.Forms.ComboBox
     Friend WithEvents pb1 As System.Windows.Forms.ProgressBar
     Friend WithEvents tbStatusText As System.Windows.Forms.TextBox
 

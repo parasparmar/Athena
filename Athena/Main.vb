@@ -4,35 +4,12 @@ Imports System.Net
 Imports System.IO
 Imports Ionic.Zip
 Imports System.Threading
-
+Imports System.Threading.Tasks
 
 Public Class FormMain
     Dim clNSE As New NSE
     Dim FolderBrowserDialog As String
     Dim cookieJar As CookieContainer
-    Private Function Intervals() As Date()
-        '' Status : In Production 09-08-2014 14.20
-        Dim DatesToDownload As Date() = {dtpFromDate.Value}
-        ReDim DatesToDownload(DateDiff(DateInterval.Day, dtpFromDate.Value, dtpToDate.Value))
-        Dim i, j As Integer
-        j = 0
-        If dtpFromDate.Value = dtpToDate.Value Then '' Check for the same From and To dates.
-            DatesToDownload(0) = dtpFromDate.Value '' Set this to From value only, Returning Array of dates has one member only.
-        Else
-            For i = 0 To DateDiff(DateInterval.Day, dtpFromDate.Value, dtpToDate.Value) - 1
-                If DateAdd(DateInterval.Day, i, dtpFromDate.Value).DayOfWeek = DayOfWeek.Saturday _
-                    Or DateAdd(DateInterval.Day, i, dtpFromDate.Value).DayOfWeek = DayOfWeek.Sunday Then
-                    '' Empty if block avoids generating workload for weekends
-                Else
-                    DatesToDownload(j) = DateAdd(DateInterval.Day, i, dtpFromDate.Value)
-                    j = j + 1 '' increase the count of dates to be filled
-                End If
-            Next
-        End If
-        ReDim Preserve DatesToDownload(j)
-        Return DatesToDownload
-    End Function
-
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         dtpToDate.Value = DateAdd(DateInterval.Day, -1, Today)
         dtpFromDate.Value = DateAdd(DateInterval.Day, -1, Today)
@@ -42,9 +19,7 @@ Public Class FormMain
         pb1.Value = 1
 
     End Sub
-    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        About.Show()
-    End Sub
+
 
     Private Function ZipExtracttoFile(strm As MemoryStream, strDestDir As String) As Boolean
         Try
@@ -63,9 +38,6 @@ Public Class FormMain
     End Function
 
 
-    Private Sub cbExchange_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbExchange.SelectedIndexChanged
-
-    End Sub
     Private Sub btnSubmit_Click_1(sender As Object, e As EventArgs) Handles btnSubmit.Click
         Dim i As Integer
         Dim r As Date
@@ -84,11 +56,11 @@ Public Class FormMain
         dtpFromDate.Value = DateAdd(DateInterval.Day, -1, Today)
         '' Reset clbFiles, cbExchange, cbdatatype
         clbFiles.Items.Clear()
-        cbExchange.SelectedIndex = -1
-        cbDataType.SelectedIndex = -1
+        'cbExchange.SelectedIndex = -1
+        'cbDataType.SelectedIndex = -1
         tbStatusText.Text = "Reset Activated."
     End Sub
-    Private Sub cbDataType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDataType.SelectedIndexChanged
+    Private Sub cbDataType_SelectedIndexChanged(sender As Object, e As EventArgs)
         '' TODO :
     End Sub
     Private Sub dtpFromDate_ValueChanged_1(sender As Object, e As EventArgs) Handles dtpFromDate.ValueChanged
@@ -138,7 +110,7 @@ Public Class FormMain
                 NewLocalFileName = Format(clbFiles.CheckedItems(i), "yyyyMMdd") & ".csv"
 
                 ''---------- This is the Synchronous downloader.
-                If Downloader(strDwnldUri, strLocalFileName, NewLocalFileName) = True Then
+                If DownloaderSync(strDwnldUri, strLocalFileName, NewLocalFileName) = True Then
                     pb1.Value = ((i + 1) / clbFiles.CheckedItems.Count) * 100
                     tbStatusText.Text = "Download successful for : " & Path.GetFileName(strLocalFileName)
                 Else
@@ -146,14 +118,37 @@ Public Class FormMain
                 End If
                 '' --------End of the Synchronous downloader region.
 
-
             End If
         Next
         btnDownload.Enabled = True
         tbStatusText.Text = "Download successful for : " & clbFiles.CheckedItems.Count & " days."
     End Sub
 
-    Private Function Downloader(ByRef strDwnldUri As String, ByRef strLocalFileName As String, ByRef NewLocalFileName As String) As Boolean
+    Private Function Intervals() As Date()
+        '' Status : In Production 09-08-2014 14.20
+        Dim DatesToDownload As Date() = {dtpFromDate.Value}
+        ReDim DatesToDownload(DateDiff(DateInterval.Day, dtpFromDate.Value, dtpToDate.Value))
+        Dim i, j As Integer
+        j = 0
+        If dtpFromDate.Value = dtpToDate.Value Then '' Check for the same From and To dates.
+            DatesToDownload(0) = dtpFromDate.Value '' Set this to From value only, Returning Array of dates has one member only.
+        Else
+            For i = 0 To DateDiff(DateInterval.Day, dtpFromDate.Value, dtpToDate.Value) - 1
+                If DateAdd(DateInterval.Day, i, dtpFromDate.Value).DayOfWeek = DayOfWeek.Saturday _
+                    Or DateAdd(DateInterval.Day, i, dtpFromDate.Value).DayOfWeek = DayOfWeek.Sunday Then
+                    '' Empty if block avoids generating workload for weekends
+                Else
+                    DatesToDownload(j) = DateAdd(DateInterval.Day, i, dtpFromDate.Value)
+                    j = j + 1 '' increase the count of dates to be filled
+                End If
+            Next
+        End If
+        ReDim Preserve DatesToDownload(j)
+        Return DatesToDownload
+    End Function
+
+    '' Commented out on 24-09-2015 12.42 to preserve the synchronous downloader
+    Private Function DownloaderSync(ByRef strDwnldUri As String, ByRef strLocalFileName As String, ByRef NewLocalFileName As String) As Boolean
         ' ToDo: Check for Internet Connectivity
         ' Although the Synchronous downloader works. THe Async is better as it will not block the calling program.
         ' Allowing it to remain responsive.
@@ -199,155 +194,19 @@ Public Class FormMain
             Else
                 tbStatusText.Text = "The downloaded content for " & Path.GetFileName(strLocalFileName) & "Is NOT a Zip file. It is a " + response.ContentType.ToString
 
-                Downloader = False
+                DownloaderSync = False
                 Exit Function
             End If
             response.Close()
         Catch ex As Exception
-            Downloader = False
+            DownloaderSync = False
             Exit Function
         End Try
-        Downloader = True
-    End Function
-
-    Private Function AsyncDownloader(ByRef strDwnldUri As String, ByRef strLocalFileName As String, ByRef NewLocalFileName As String) As Boolean
-        Try
-            Dim request As HttpWebRequest
-            Dim response As HttpWebResponse
-            Dim result As IAsyncResult
-            Dim state As WebRequestState
-            Dim timeout As Integer
-            request = WebRequest.Create(strDwnldUri)
-            With request
-                .UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko"
-                .Accept = "text/html, application/xhtml+xml, */*"
-                ''.Connection = "Keep-Alive"
-                .Headers.Add("Accept-Language", "en-IN")
-                .Headers.Add("Accept-Encoding", "gzip, deflate")
-                .Headers.Add("DNT", "1")
-                .CookieContainer = cookieJar
-            End With
-            state = New WebRequestState(request)
-            ' Begin the async request
-            result = request.BeginGetResponse(New AsyncCallback(AddressOf RequestComplete), state)
-
-            ' Set timeout at 1 minute
-            timeout = 1000 * 60
-
-            ' Register a timeout for the async request
-            ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, New WaitOrTimerCallback(AddressOf TimeoutCallback), state, timeout, True)
-
-            ' Display the headers in the request
-            ''Debug.WriteLine("Resulting Request Headers: " & request.Headers.Keys.Count.ToString())
-            ''Debug.WriteLine(request.Headers.ToString())
-            response = request.GetResponse()
-            If response.ContentType = "application/zip" Then
-                ''Debug.WriteLine("Is Zip")
-                Dim intLen As Int32 = response.ContentLength
-                ''Debug.WriteLine("response length: " + intLen.ToString)
-                Dim memStream As MemoryStream
-                Using stmResponse As IO.Stream = response.GetResponseStream()
-                    'Using ms As New MemoryStream(intLen)
-                    Dim buffer = New Byte(intLen) {}
-                    'Dim memstream As MemoryStream = New MemoryStream(buffer)
-                    Dim bytesRead As Integer = 0 '' 15-08-2014 23.33 This caused me a lot of headaches.
-                    '' Please make sure that the bytesread=0 stays
-                    Do
-                        bytesRead += stmResponse.Read(buffer, bytesRead, intLen - bytesRead)
-                    Loop Until bytesRead = intLen
-                    memStream = New MemoryStream(buffer)
-                    Dim res As Boolean = False
-                    Dim ExtractedFileName As String
-                    ExtractedFileName = Path.GetDirectoryName(strLocalFileName)
-                    res = ZipExtracttoFile(memStream, ExtractedFileName)
-                    strLocalFileName = Replace(strLocalFileName, ".zip", "")
-                    My.Computer.FileSystem.RenameFile(strLocalFileName, NewLocalFileName)
-                End Using
-            Else
-                tbStatusText.Text = "The downloaded content for " & Path.GetFileName(strLocalFileName) & "Is NOT a Zip file. It is a " + response.ContentType.ToString
-
-                AsyncDownloader = False
-                Exit Function
-            End If
-            response.Close()
-        Catch ex As Exception
-            AsyncDownloader = False
-            Exit Function
-        End Try
-        AsyncDownloader = True
+        DownloaderSync = True
     End Function
 
 
 
-
-    ''----------------------EXPERIMENTAL CODE REGION 1--------------------------
-    Public Sub SendAsynchRequest(ByVal xmlDoc As String)
-
-        Dim request As HttpWebRequest
-
-        ' Create the request
-        request = CType(WebRequest.Create("http://yourdomain.com"), HttpWebRequest)
-
-        request.Method = "POST"
-
-        ' Convert the xml doc string into a byte array
-        Dim bytes As Byte()
-        bytes = System.Text.Encoding.Unicode.GetBytes(xmlDoc)
-
-        ' Assign the content length
-        request.ContentLength = bytes.Length
-
-        ' Write the xml doc bytes to request stream
-        request.GetRequestStream.Write(bytes, 0, bytes.Length)
-
-        Dim result As IAsyncResult
-        Dim state As WebRequestState
-        Dim timeout As Integer
-
-        ' Create the state object used to access the web request
-        state = New WebRequestState(request)
-
-        ' Begin the async request
-        result = request.BeginGetResponse(New AsyncCallback(AddressOf RequestComplete), state)
-
-        ' Set timeout at 1 minute
-        timeout = 1000 * 60
-
-        ' Register a timeout for the async request
-        ThreadPool.RegisterWaitForSingleObject(result.AsyncWaitHandle, New WaitOrTimerCallback(AddressOf TimeoutCallback), state, timeout, True)
-
-
-    End Sub
-
-    ' Method called when a request times out
-    Private Sub TimeoutCallback(ByVal state As Object, ByVal timeOut As Boolean)
-        If (timeOut) Then
-            ' Abort the request
-            CType(state, WebRequestState).Request.Abort()
-        End If
-    End Sub
-
-    ' Method called when the request completes
-    Private Sub RequestComplete(ByVal result As IAsyncResult)
-        ' Get the request
-        Dim request As WebRequest
-        request = DirectCast(result.AsyncState, WebRequestState).Request
-    End Sub
-
-    ' Stores web request for access during async processing
-    Private Class WebRequestState
-        ' Holds the request object
-        Public Request As WebRequest
-
-        Public Sub New(ByVal newRequest As WebRequest)
-            Request = newRequest
-        End Sub
-    End Class
-    ''----------------------EXPERIMENTAL CODE REGION 1 ENDS--------------------------
-
-    Private Sub pb1_Click(sender As Object, e As EventArgs) Handles pb1.Click
-
-    End Sub
 End Class
 
 
