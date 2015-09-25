@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormMain
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class FormMain
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.fbdDownloadLocation = New System.Windows.Forms.FolderBrowserDialog()
         Me.clbFiles = New System.Windows.Forms.CheckedListBox()
@@ -137,5 +137,4 @@ Partial Class FormMain
     Friend WithEvents dtpFromDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents pb1 As System.Windows.Forms.ProgressBar
     Friend WithEvents tbStatusText As System.Windows.Forms.TextBox
-
 End Class

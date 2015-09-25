@@ -21,22 +21,6 @@ Public Class FormMain
     End Sub
 
 
-    Private Function ZipExtracttoFile(strm As MemoryStream, strDestDir As String) As Boolean
-        Try
-            Using zip As ZipFile = ZipFile.Read(strm)
-                zip.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently
-
-                For Each e As ZipEntry In zip
-                    e.Extract(strDestDir)
-                Next
-            End Using
-        Catch ex As Exception
-            Console.Error.WriteLine("exception: {0}", ex.ToString)
-            Return False
-        End Try
-        Return True
-    End Function
-
 
     Private Sub btnSubmit_Click_1(sender As Object, e As EventArgs) Handles btnSubmit.Click
         Dim i As Integer
@@ -48,6 +32,7 @@ Public Class FormMain
             clbFiles.Items.Add(j(i), True)
         Next
         tbStatusText.Text = "Download Range : " & j.GetUpperBound(0) & " days. Weekends excluded."
+
     End Sub
 
     Private Sub btnReset_Click_1(sender As Object, e As EventArgs) Handles btnReset.Click
@@ -59,16 +44,17 @@ Public Class FormMain
         'cbExchange.SelectedIndex = -1
         'cbDataType.SelectedIndex = -1
         tbStatusText.Text = "Reset Activated."
+
     End Sub
-    Private Sub cbDataType_SelectedIndexChanged(sender As Object, e As EventArgs)
-        '' TODO :
-    End Sub
+
     Private Sub dtpFromDate_ValueChanged_1(sender As Object, e As EventArgs) Handles dtpFromDate.ValueChanged
         If dtpFromDate.Value >= Today Then
-            MsgBox("As this is an invalid selection, I've reset both these dates to yesterday." & vbCrLf & "If you'd like to, please try again.", MsgBoxStyle.Critical)
+            MsgBox("The Dates are invalid, " & vbCrLf & "If you'd like to, please try again.", MsgBoxStyle.Information)
             dtpFromDate.Value = DateAdd(DateInterval.Day, -1, Today)
         End If
         tbStatusText.Text = "From Date Set as : " & dtpFromDate.Value
+
+        btnSubmit_Click_1(btnSubmit, New EventArgs) '' Fire the btnSubmit Click for the user's convenience.
     End Sub
     Private Sub dtpToDate_ValueChanged_1(sender As Object, e As EventArgs) Handles dtpToDate.ValueChanged
         If dtpToDate.Value >= Today Then
@@ -76,6 +62,8 @@ Public Class FormMain
             dtpToDate.Value = DateAdd(DateInterval.Day, -1, Today)
         End If
         tbStatusText.Text = "To Date Set : " & dtpToDate.Value
+
+        btnSubmit_Click_1(btnSubmit, New EventArgs) '' Fire the btnSubmit Click for the user's convenience.
     End Sub
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
         btnDownload.Enabled = False
@@ -111,8 +99,9 @@ Public Class FormMain
 
                 ''---------- This is the Synchronous downloader.
                 If DownloaderSync(strDwnldUri, strLocalFileName, NewLocalFileName) = True Then
-                    pb1.Value = ((i + 1) / clbFiles.CheckedItems.Count) * 100
-                    tbStatusText.Text = "Download successful for : " & Path.GetFileName(strLocalFileName)
+                    pb1.Value = CDec((i + 1) / clbFiles.CheckedItems.Count) * 100
+                    tbStatusText.Text = pb1.Value.ToString & " %"
+
                 Else
                     tbStatusText.Text = "Download FAILED for : " & Path.GetFileName(strLocalFileName)
                 End If
@@ -121,7 +110,8 @@ Public Class FormMain
             End If
         Next
         btnDownload.Enabled = True
-        tbStatusText.Text = "Download successful for : " & clbFiles.CheckedItems.Count & " days."
+
+        tbStatusText.Text = pb1.Value.ToString & " %"
     End Sub
 
     Private Function Intervals() As Date()
@@ -147,7 +137,7 @@ Public Class FormMain
         Return DatesToDownload
     End Function
 
-    '' Commented out on 24-09-2015 12.42 to preserve the synchronous downloader
+
     Private Function DownloaderSync(ByRef strDwnldUri As String, ByRef strLocalFileName As String, ByRef NewLocalFileName As String) As Boolean
         ' ToDo: Check for Internet Connectivity
         ' Although the Synchronous downloader works. THe Async is better as it will not block the calling program.
@@ -169,34 +159,14 @@ Public Class FormMain
             ''Debug.WriteLine("Resulting Request Headers: " & request.Headers.Keys.Count.ToString())
             ''Debug.WriteLine(request.Headers.ToString())
             response = request.GetResponse()
-            If response.ContentType = "application/zip" Then
-                ''Debug.WriteLine("Is Zip")
-                Dim intLen As Int32 = response.ContentLength
-                ''Debug.WriteLine("response length: " + intLen.ToString)
-                Dim memStream As MemoryStream
-                Using stmResponse As IO.Stream = response.GetResponseStream()
-                    'Using ms As New MemoryStream(intLen)
-                    Dim buffer = New Byte(intLen) {}
-                    'Dim memstream As MemoryStream = New MemoryStream(buffer)
-                    Dim bytesRead As Integer = 0 '' 15-08-2014 23.33 This caused me a lot of headaches.
-                    '' Please make sure that the bytesread=0 stays
-                    Do
-                        bytesRead += stmResponse.Read(buffer, bytesRead, intLen - bytesRead)
-                    Loop Until bytesRead = intLen
-                    memStream = New MemoryStream(buffer)
-                    Dim res As Boolean = False
-                    Dim ExtractedFileName As String
-                    ExtractedFileName = Path.GetDirectoryName(strLocalFileName)
-                    res = ZipExtracttoFile(memStream, ExtractedFileName)
-                    strLocalFileName = Replace(strLocalFileName, ".zip", "")
-                    My.Computer.FileSystem.RenameFile(strLocalFileName, NewLocalFileName)
-                End Using
+            '' DownloadWriter downloads and renames the expected ZIP from response into a localfile named NewLocalFileName
+            '' Returns true if successful and false if not.
+            If DownloadWriter(response, strLocalFileName, NewLocalFileName) = True Then
+                DownloaderSync = True
             Else
-                tbStatusText.Text = "The downloaded content for " & Path.GetFileName(strLocalFileName) & "Is NOT a Zip file. It is a " + response.ContentType.ToString
-
                 DownloaderSync = False
-                Exit Function
             End If
+            '' Tidy up the HTTPWebResponse
             response.Close()
         Catch ex As Exception
             DownloaderSync = False
@@ -204,9 +174,59 @@ Public Class FormMain
         End Try
         DownloaderSync = True
     End Function
+    '' Created 25-09-2015, in production.
+    Private Function DownloadWriter(ByRef response As HttpWebResponse, ByRef strLocalFileName As String, ByRef NewLocalFileName As String) As Boolean
+        ' Take the HTTP Web response from Downloader.
+        ' Unzip it to the destination folder.
+        If response.ContentType = "application/zip" Then
 
+            Dim intLen As Int32 = response.ContentLength
 
+            Dim memStream As MemoryStream
+            Using stmResponse As IO.Stream = response.GetResponseStream()
 
+                Dim buffer = New Byte(intLen) {}
+
+                Dim bytesRead As Integer = 0 '' 15-08-2014 23.33 This caused me a lot of headaches.
+                '' Please make sure that the bytesread=0 stays
+                Do
+                    bytesRead += stmResponse.Read(buffer, bytesRead, intLen - bytesRead)
+                Loop Until bytesRead = intLen
+                memStream = New MemoryStream(buffer)
+                Dim res As Boolean = False
+                Dim ExtractedFileName As String
+                ExtractedFileName = Path.GetDirectoryName(strLocalFileName)
+                res = ZipExtracttoFile(memStream, ExtractedFileName)
+                strLocalFileName = Replace(strLocalFileName, ".zip", "")
+                If My.Computer.FileSystem.FileExists(ExtractedFileName & "\" & NewLocalFileName) Then
+                    My.Computer.FileSystem.DeleteFile(ExtractedFileName & "\" & NewLocalFileName)
+                    Debug.WriteLine("Deleted Existing File : " + NewLocalFileName)
+                End If
+                My.Computer.FileSystem.RenameFile(strLocalFileName, NewLocalFileName)
+            End Using
+
+            DownloadWriter = True
+        Else
+            tbStatusText.Text = "The downloaded content for " & Path.GetFileName(strLocalFileName) & "Is NOT a Zip file. It is a " + response.ContentType.ToString
+            DownloadWriter = False
+        End If
+    End Function
+
+    Private Function ZipExtracttoFile(strm As MemoryStream, strDestDir As String) As Boolean
+        Try
+            Using zip As ZipFile = ZipFile.Read(strm)
+                zip.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently
+
+                For Each e As ZipEntry In zip
+                    e.Extract(strDestDir)
+                Next
+            End Using
+        Catch ex As Exception
+            Console.Error.WriteLine("exception: {0}", ex.ToString)
+            Return False
+        End Try
+        Return True
+    End Function
 End Class
 
 
