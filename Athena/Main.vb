@@ -20,8 +20,6 @@ Public Class FormMain
 
     End Sub
 
-
-
     Private Sub btnSubmit_Click_1(sender As Object, e As EventArgs) Handles btnSubmit.Click
         Dim i As Integer
         Dim r As Date

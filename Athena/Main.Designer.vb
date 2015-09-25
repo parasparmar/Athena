@@ -31,22 +31,23 @@ Partial Class FormMain
         Me.dtpFromDate = New System.Windows.Forms.DateTimePicker()
         Me.pb1 = New System.Windows.Forms.ProgressBar()
         Me.tbStatusText = New System.Windows.Forms.TextBox()
+        Me.BgWrkr1 = New System.ComponentModel.BackgroundWorker()
         Me.SuspendLayout()
         '
         'clbFiles
         '
         Me.clbFiles.CheckOnClick = True
         Me.clbFiles.FormattingEnabled = True
-        Me.clbFiles.Location = New System.Drawing.Point(11, 170)
+        Me.clbFiles.Location = New System.Drawing.Point(11, 44)
         Me.clbFiles.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.clbFiles.MultiColumn = True
         Me.clbFiles.Name = "clbFiles"
-        Me.clbFiles.Size = New System.Drawing.Size(373, 504)
+        Me.clbFiles.Size = New System.Drawing.Size(374, 184)
         Me.clbFiles.TabIndex = 9
         '
         'btnDownload
         '
-        Me.btnDownload.Location = New System.Drawing.Point(11, 139)
+        Me.btnDownload.Location = New System.Drawing.Point(12, 315)
         Me.btnDownload.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnDownload.Name = "btnDownload"
         Me.btnDownload.Size = New System.Drawing.Size(373, 28)
@@ -57,10 +58,10 @@ Partial Class FormMain
         'btnReset
         '
         Me.btnReset.BackColor = System.Drawing.SystemColors.Window
-        Me.btnReset.Location = New System.Drawing.Point(199, 44)
+        Me.btnReset.Location = New System.Drawing.Point(12, 282)
         Me.btnReset.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnReset.Name = "btnReset"
-        Me.btnReset.Size = New System.Drawing.Size(186, 27)
+        Me.btnReset.Size = New System.Drawing.Size(373, 27)
         Me.btnReset.TabIndex = 17
         Me.btnReset.Text = "Reset"
         Me.btnReset.UseVisualStyleBackColor = False
@@ -68,13 +69,14 @@ Partial Class FormMain
         'btnSubmit
         '
         Me.btnSubmit.BackColor = System.Drawing.SystemColors.Window
-        Me.btnSubmit.Location = New System.Drawing.Point(11, 44)
+        Me.btnSubmit.Location = New System.Drawing.Point(12, 349)
         Me.btnSubmit.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnSubmit.Name = "btnSubmit"
-        Me.btnSubmit.Size = New System.Drawing.Size(184, 27)
+        Me.btnSubmit.Size = New System.Drawing.Size(373, 27)
         Me.btnSubmit.TabIndex = 16
         Me.btnSubmit.Text = "Dates Selection"
         Me.btnSubmit.UseVisualStyleBackColor = False
+        Me.btnSubmit.Visible = False
         '
         'dtpToDate
         '
@@ -94,15 +96,15 @@ Partial Class FormMain
         '
         'pb1
         '
-        Me.pb1.Location = New System.Drawing.Point(11, 110)
+        Me.pb1.Location = New System.Drawing.Point(12, 234)
         Me.pb1.Name = "pb1"
-        Me.pb1.Size = New System.Drawing.Size(373, 25)
+        Me.pb1.Size = New System.Drawing.Size(373, 11)
         Me.pb1.TabIndex = 19
         '
         'tbStatusText
         '
         Me.tbStatusText.BackColor = System.Drawing.SystemColors.Control
-        Me.tbStatusText.Location = New System.Drawing.Point(11, 78)
+        Me.tbStatusText.Location = New System.Drawing.Point(12, 251)
         Me.tbStatusText.Name = "tbStatusText"
         Me.tbStatusText.Size = New System.Drawing.Size(373, 25)
         Me.tbStatusText.TabIndex = 20
@@ -111,7 +113,7 @@ Partial Class FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(402, 711)
+        Me.ClientSize = New System.Drawing.Size(396, 381)
         Me.Controls.Add(Me.tbStatusText)
         Me.Controls.Add(Me.pb1)
         Me.Controls.Add(Me.btnDownload)
@@ -137,4 +139,5 @@ Partial Class FormMain
     Friend WithEvents dtpFromDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents pb1 As System.Windows.Forms.ProgressBar
     Friend WithEvents tbStatusText As System.Windows.Forms.TextBox
+    Friend WithEvents BgWrkr1 As System.ComponentModel.BackgroundWorker
 End Class
