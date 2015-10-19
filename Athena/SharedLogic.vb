@@ -1,5 +1,0 @@
-﻿Module SharedLogic
-
-
-
-End Module
