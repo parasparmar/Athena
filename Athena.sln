@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D102E0E5-9004-46D3-91A1-BAF4670C215E}"
 	ProjectSection(SolutionItems) = preProject
 		..\DotNetZipLib-DevKit-v1.9\zip-v1.9-Reduced\Release\Ionic.Zip.Reduced.dll = ..\DotNetZipLib-DevKit-v1.9\zip-v1.9-Reduced\Release\Ionic.Zip.Reduced.dll
-		URLBuilder.vb = URLBuilder.vb
 	EndProjectSection
 EndProject
 Global
