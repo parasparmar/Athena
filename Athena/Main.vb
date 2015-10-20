@@ -8,26 +8,88 @@ Public Class FormMain
 
     Dim FolderBrowserDialog As String
     Dim cookieJar As CookieContainer
-    Dim MyFolder As String = My.Computer.FileSystem.CurrentDirectory
-    Dim CurrentFile As Integer = 0
-    Dim FilesToProcessCounter As Integer = 0
-    Dim strDwnldUri As String
-    Dim strLocalFileName As String
-    Dim NewLocalFileName As String
+    Dim MyFolder As String = vbEmpty
 
+    Enum GUIStage
+        Initialization
+        DestinationPath
+        'DateRangeChosen
+        DatesToDownload
+        MarketChosen
+        DestinationFormatsChosen
+        DownloadsActivated
+        ResetActivated
+        SaveSettings
+    End Enum
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnDownload.Enabled = False
-        tsprogressbar1.Minimum = 1
-        tsprogressbar1.Maximum = 100
-        tsprogressbar1.Value = 1
+        GUIUpdater(GUIStage.Initialization)
     End Sub
+
+    Private Sub GUIUpdater(ByVal Stage As GUIStage)
+        'TODO: Initialization, DestinationPath, DateRangeChosen, DatesToDownload, MarketChosen, DestinationFormatsChosen, DownloadsActivated, ResetActivated, SaveSettings. 
+
+
+        Select Case Stage
+            Case GUIStage.Initialization
+                gbChooseDates.Visible = False
+                gbChooseMarkets.Visible = False
+                gbDataFormats.Visible = False
+                btnDownload.Enabled = False
+                btnReset.Enabled = False
+                btnNewProfile.Enabled = False
+                tsprogressbar1.Minimum = 1
+                tsprogressbar1.Maximum = 100
+                tsprogressbar1.Value = 1
+                tsStatusText.Text = "Please select a folder to download data at."
+
+            Case GUIStage.DestinationPath
+                gbChooseDates.Visible = True
+                gbChooseMarkets.Visible = False
+                gbDataFormats.Visible = False
+                btnDownload.Enabled = False
+                btnReset.Enabled = False
+                btnNewProfile.Enabled = False
+                tsStatusText.Text = "Please select the dates to download data for."
+
+            'Case GUIStage.DateRangeChosen
+            Case GUIStage.DatesToDownload
+                gbChooseMarkets.Visible = True
+                gbDataFormats.Visible = False
+                btnDownload.Enabled = False
+                btnReset.Enabled = False
+                btnNewProfile.Enabled = False
+                tsStatusText.Text = "Please select the type of Stock Market data to download."
+
+            Case GUIStage.MarketChosen
+                gbDataFormats.Visible = True
+                btnDownload.Enabled = False
+                btnReset.Enabled = False
+                btnNewProfile.Enabled = False
+                tsStatusText.Text = "Please choose the format to convert your Stock Market data."
+
+            Case GUIStage.DestinationFormatsChosen
+                btnDownload.Enabled = True
+                btnReset.Enabled = False
+                btnNewProfile.Enabled = True
+                tsStatusText.Text = "Athena's ready to download Stock Market data."
+
+            Case GUIStage.DownloadsActivated
+                btnReset.Enabled = True
+                btnNewProfile.Enabled = True
+
+            Case GUIStage.ResetActivated
+
+            Case GUIStage.SaveSettings
+            Case Else
+        End Select
+
+    End Sub
+
     ' Stage 1 : Choose a valid Download Path.
     Private Sub tbDownloadLocation_Click(sender As Object, e As EventArgs) Handles tbDownloadLocation.Click
         ' 0. Request the user to select a folder (MyFolder) where the downloaded files will be kept
         fbdDownloadLocation.ShowNewFolderButton = True
-
-
         If (fbdDownloadLocation.ShowDialog() = Windows.Forms.DialogResult.OK) Then
             MyFolder = fbdDownloadLocation.SelectedPath
             Dim folderExists As Boolean = My.Computer.FileSystem.DirectoryExists(MyFolder)
@@ -38,16 +100,14 @@ Public Class FormMain
                 tbDownloadLocation.Text = "Please select the folder to download at."
             End If
         End If
-        ' 1. Display the chosen Path
-
-
+        GUIUpdater(GUIStage.DestinationPath)
     End Sub
 
     ' Stage 2 : Choose a valid dates for the download.
     Private Sub dtpFromDate_ValueChanged(sender As Object, e As EventArgs) Handles dtpFromDate.ValueChanged
         clbFilesUpdater() '' Sub runs and populates the checked list box with a list of dates to download.
     End Sub
-    Private Sub dtpToDate_ValueChanged(sender As Object, e As EventArgs) Handles dtpToDate.ValueChanged
+    Private Sub dtpToDate_ValueChanged(sender As Object, e As EventArgs)
         clbFilesUpdater() '' Sub runs and populates the checked list box with a list of dates to download.
     End Sub
 
@@ -58,6 +118,7 @@ Public Class FormMain
         For Each Mydate In MyDates
             clbFiles.Items.Add(Mydate, True) '' Added items will be Selected by default.
         Next
+        GUIUpdater(GUIStage.DatesToDownload)
     End Sub
 
 
@@ -91,27 +152,35 @@ Public Class FormMain
         For i = 0 To clbFiles.CheckedItems.Count - 1
             MyDatesArray(i) = clbFiles.CheckedItems(i)
         Next
-        ' Done 2. Use the MyDatesArray to receive a 2DArray of Server and LocalFileNames and the URI to download from
+        ' Done 2: Use the MyDatesArray to receive a 2DArray of Server and LocalFileNames and the URI to download from
         MyFileNameandURL2DArray = clNSE.URLFromOptions(MyDatesArray)
-        ' Done 4. Download these files using an instance of the WebClient.DownloadFile Method one after the other
-        For i = 0 To UBound(MyFileNameandURL2DArray, 1) - 1
-            ''---------- This is the Synchronous downloader.
-            If DownloadAgent(MyFileNameandURL2DArray(i, 1).ToString, tbDownloadLocation.Text.ToString & "\" & MyFileNameandURL2DArray(i, 2).ToString, MyFileNameandURL2DArray(i, 3).ToString) = True Then
-                'TODO: Increment Progress of file download
-                If i >= 1 And i <= UBound(MyFileNameandURL2DArray, 1) - 1 Then
-                    tsprogressbar1.Value = 100 * (i / (UBound(MyFileNameandURL2DArray, 1) - 1))
-                    ''tsStatusText.Text = "Downloaded : " & i & "of " & UBound(MyFileNameandURL2DArray, 1)
-                End If
-            End If
-        Next
-        '' --------End of the Synchronous downloader region.
-        tsStatusText.Text = "Downloaded all " & UBound(MyFileNameandURL2DArray, 1) & " Files"
-        ' Done 4. On Download completion open MyFolder and show it to the user
-        Process.Start(“explorer”, tbDownloadLocation.Text.ToString)
+        'Done 3: Check for Internet Connectivity
 
+        If My.Computer.Network.IsAvailable Then
+
+            ' Done 4. Download these files using an instance of the WebClient.DownloadFile Method one after the other
+
+            For i = 0 To UBound(MyFileNameandURL2DArray, 1) - 1
+                ''---------- This is the Synchronous downloader.
+                If DownloadAgent(MyFileNameandURL2DArray(i, 1).ToString, tbDownloadLocation.Text.ToString & "\" & MyFileNameandURL2DArray(i, 2).ToString, MyFileNameandURL2DArray(i, 3).ToString) = True Then
+                    'TODO: Increment Progress of file download
+                    If i >= 1 And i <= UBound(MyFileNameandURL2DArray, 1) - 1 Then
+                        tsprogressbar1.Value = 100 * (i / (UBound(MyFileNameandURL2DArray, 1) - 1))
+                        ''tsStatusText.Text = "Downloaded : " & i & "of " & UBound(MyFileNameandURL2DArray, 1)
+                    End If
+                End If
+            Next
+            '' --------End of the Synchronous downloader region.
+            tsStatusText.Text = "Downloaded all " & UBound(MyFileNameandURL2DArray, 1) & " Files"
+            ' Done 4. On Download completion open MyFolder and show it to the user
+            Process.Start(“explorer”, tbDownloadLocation.Text.ToString)
+        Else
+            Debug.WriteLine("Network is not available")
+            End
+        End If
     End Sub
 
-    ' ToDo: Check for Internet Connectivity
+
     Private Function DownloadAgent(ByVal strDwnldUri As String, ByVal strLocalFileName As String, ByVal NewLocalFileName As String) As Boolean
 
         'ISSUE : Although the Synchronous downloader works. It will freeze the UI. This is a known devil.
@@ -129,9 +198,6 @@ Public Class FormMain
                 .Headers.Add("DNT", "1")
                 .CookieContainer = cookieJar
             End With
-            ' Display the headers in the request
-            ''Debug.WriteLine("Resulting Request Headers: " & request.Headers.Keys.Count.ToString())
-            ''Debug.WriteLine(request.Headers.ToString())
             response = request.GetResponse()
             '' DownloadWriter downloads and renames the expected ZIP from response into a localfile named NewLocalFileName
             '' Returns true if successful and false if not.
@@ -140,7 +206,6 @@ Public Class FormMain
             Else
                 DownloadAgent = False
             End If
-
             '' Tidy up the HTTPWebResponse
             response.Close()
         Catch ex As Exception
@@ -203,6 +268,15 @@ Public Class FormMain
         dtpToDate.Value = Today
         clbFiles.Items.Clear()
         tsStatusText.Text = "Reset Activated."
+        tsprogressbar1.Value = 1
+    End Sub
+
+    Private Sub clbMarkets_SelectedIndexChanged(sender As Object, e As EventArgs) Handles clbMarkets.SelectedIndexChanged
+        GUIUpdater(GUIStage.MarketChosen)
+    End Sub
+
+    Private Sub gbDataFormats_Enter(sender As Object, e As EventArgs) Handles gbDataFormats.Enter
+        GUIUpdater(GUIStage.DestinationFormatsChosen)
     End Sub
 End Class
 
