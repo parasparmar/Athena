@@ -2,15 +2,18 @@
 Imports System.IO
 Imports Ionic.Zip
 Public Class Engine
-    '' Status: In Production 24-01-2016 21.48
     ''' <summary>
-    ''' The DateListGenerator is a method of returning a range of downloadable dates. It's meant to reduce the work of searching for and 
-    ''' downloading invalid dates. ie: weekends, public holidays, non-tradeable dates in general.
+    ''' Given a FromDate less than or equal to the ToDate, DateListGenerator is a method of returning a range of downloadable dates. 
     ''' The intent is to populate only those valid dates for selection.
     ''' </summary>
+    ''' <remarks>
+    ''' It's meant to reduce the work of searching for and 
+    ''' downloading invalid dates. ie: weekends, public holidays, non-tradeable dates in general.
+    ''' </remarks>
     ''' <param name="FromDate">Date from </param>
     ''' <param name="ToDate"></param>
-    ''' <returns></returns>
+    ''' <returns>ArrayList of Dates</returns>
+    ''' <status>In Production 24-01-2016 21.48</status>
     Public Function DateListGenerator(ByVal FromDate As Date, ByVal ToDate As Date)
         '' Objective : DateList Generator generates an array of weekday dates between the given from and to dates.
         '' Input : FromDate, ToDate as Dates
@@ -34,11 +37,12 @@ Public Class Engine
         Return DateListArray
     End Function
 
-    ' Done : Given a combination of Market Options return the URL from where to download or read the needed data.
-    ' TO DO : Pay attention to the ability to read this from an INI file so as to extend this easily.
 
+
+    ''' <summary>
+    ''' Task is a data structure that tracks information, Defines the needed information that the engine class tracks to initiate, complete a successful download and deflate the received file. 
+    ''' </summary>
     Structure Task
-        '' Defines the needed information that the engine class tracks to initiate, complete a successful download and deflate the received file.
         '' 0. This_Date = The date component of the associated downloaded file.
         Dim This_Date As Date
         '' 1. ServerURI_WFileName = The complete download path and file name
@@ -47,27 +51,28 @@ Public Class Engine
         Dim ServerFile_NameOnly As String
         '' 3. LocalFile_NameOnly = The eventually Deflated(unzipped) file name.
         Dim LocalDeflatedFile_NameOnly As String
+        '' 4. MktBasedDownloadSubPath = Needed to segregate the Deflated(unzipped) file into a folder represented by it's Market.
         Dim MktBasedDownloadSubPath As String
+
     End Structure
     '' TaskList = This tracks the success or failure of each individual download.
-    Dim TaskList As New List(Of Task)
-    Dim cookieJar As CookieContainer
-
+    Private TaskList As New List(Of Task)
+    Private cookieJar As CookieContainer
     Public Property LocalBasePathToDownload As String
 
     '' getURLFrom takes in a datearray  and returns a dictionary of filenames and urls from which to download individual files.
-    Public Function createTaskList(ByVal MarketType As List(Of String), ByVal Dates() As Date)
+    Public Function createTaskList(ByVal MarketType As List(Of String), ByVal DateList As List(Of Date))
         '' Status : In Production 09-08-2014 13.20
         For Each Market In MarketType
-            For Each Individual_Day In Dates
-                TaskList.Add(createSingleTask(Market, Individual_Day))
+            For Each Individual_Day In DateList
+                TaskList.Add(createTask(Market, Individual_Day))
             Next
         Next
         Return TaskList
     End Function
 
 
-    Private Function createSingleTask(ByVal MyMarketsType As String, MyDate As Date) As Task
+    Private Function createTask(ByVal MyMarketsType As String, MyDate As Date) As Task
         '' The NSE Equity URL is of the format http://www.nseindia.com/content/historical/EQUITIES/<YYYY>/<MMM>/cm<dd><MMM><YYYY>bhav.csv.zip
         '' for eg : http://www.nseindia.com/content/historical/EQUITIES/2014/JUL/cm31JUL2014bhav.csv.zip is a bhav copy for 31/Jul/2014
         '' MyMarketsType A string consisting of a limited choice of available Markets and Instruments.
@@ -94,6 +99,122 @@ Public Class Engine
 
                 ServerFile_NameOnly = "EQ" & Format(MyDate, "dd").ToUpper.ToString & Format(MyDate, "MM").ToUpper.ToString & Format(MyDate, "yy").ToUpper.ToString & "_CSV.zip"
                 ServerURI_WFileName = "http://www.bseindia.com/download/BhavCopy/Equity/" & ServerFile_NameOnly
+            Case "AMFII - Mutual Funds"
+
+                '' Main URL : http://www.amfiindia.com/nav-history-download
+                ''GET /DownloadNAVHistoryReport_Po.aspx?mf=9&frmdt=01-Jan-1960&todt=25-Jan-2016 HTTP/1.1
+                ''Host:           portal.amfiindia.com
+                ''                User-Agent: Mozilla/ 5.0(Windows NT 10.0; WOW64; rv: 43.0) Gecko/20100101 Firefox/43.0
+                ''Accept:         Text/ html, Application / xhtml + Xml, Application / Xml;q=0.9,*/*;q=0.8
+                ''Accept-Language: en-US, en;q=0.5
+                ''Accept-Encoding: gzip, deflate
+                ''DNT: 1
+                ''Referer:        http : //www.amfiindia.com/nav-history-download
+                ''Cookie:         __utma = 57940026.105457447.1448689042.1448981552.1453695335.6; __utmz=57940026.1448689042.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmb=57940026.4.10.1453695335; __utmt=1; __utmc=57940026
+                ''Connection:     keep-alive
+                ''--------------- RESPONSE HEADERS---------------
+                '' URL : http://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=9&frmdt=01-Jan-1960&todt=25-Jan-2016
+                ''                HTTP/ 1.1 200 OK
+                ''Cache-Control: no-Cache
+                ''Pragma:         no-Cache
+                ''Content-Type: Text/ plain
+                ''Expires: -1
+                ''Vary:           Accept-Encoding
+                ''Server:         Microsoft-IIS / 8.5
+                ''Set-Cookie: ASP.NET_SessionId = qgdwxu45dgbw4pnhrohc0c45; path=/; HttpOnly
+                ''Content-Disposition: inline; filename=NAVHistoryReport250116.txt
+                ''X-AspNet - Version:  2.0.50727
+                ''X-Powered - By: ASP.NET
+                ''                Date : Mon, 25 Jan 2016 04: 17:41 GMT
+                ''Content-Length:  93076579
+                ''--------------- RESPONSE BODY---------------
+                ''HTTP/ 1.1 200 OK
+                ''Cache-Control: no-Cache
+                ''Pragma:         no-Cache
+                ''Content-Type: Text/ plain
+                ''Expires: -1
+                ''Vary:           Accept-Encoding
+                ''Server:         Microsoft-IIS / 8.5
+                ''Set-Cookie: ASP.NET_SessionId = qgdwxu45dgbw4pnhrohc0c45; path=/; HttpOnly
+                ''Content-Disposition: inline; filename=NAVHistoryReport250116.txt
+                ''X-AspNet - Version:  2.0.50727
+                ''X-Powered - By: ASP.NET
+                ''Date : Mon, 25 Jan 2016 04: 17:41 GMT
+                ''Content-Length:  93076579
+
+                ''<select Class="select" id="NavDownMFName" name="NavDownMFName" onchange="return LoadNavHistoryDownload(&#39;0&#39;);"><option value="">--Select Mutual Fund--</option>
+                ''<option value = "39" > ABN  AMRO Mutual Fund</Option>
+                ''<option value = "50" > AEGON Mutual Fund</Option>
+                ''<option value = "1" > Alliance Capital Mutual Fund</Option>
+                ''<option value = "53" > Axis Mutual Fund</Option>
+                ''<option value = "4" > Baroda Pioneer Mutual Fund</Option>
+                ''<option value = "36" > Benchmark Mutual Fund</Option>
+                ''<option value = "3" > Birla Sun Life Mutual Fund</Option>
+                ''<option value = "59" > BNP Paribas Mutual Fund</Option>
+                ''<option value = "46" > BOI AXA Mutual Fund</Option>
+                ''<option value = "32" > Canara Robeco Mutual Fund</Option>
+                ''<option value = "60" > Daiwa Mutual Fund</Option>
+                ''<option value = "31" > DBS Chola Mutual Fund</Option>
+                ''<option value = "38" > Deutsche Mutual Fund</Option>
+                ''<option value = "58" > DHFL Pramerica Mutual Fund</Option>
+                ''<option value = "6" > DSP BlackRock Mutual Fund</Option>
+                ''<option value = "47" > Edelweiss Mutual Fund</Option>
+                ''<option value = "13" > Escorts Mutual Fund</Option>
+                ''<option value = "40" > Fidelity Mutual Fund</Option>
+                ''<option value = "51" > Fortis Mutual Fund</Option>
+                ''<option value = "27" > Franklin Templeton Mutual Fund</Option>
+                ''<option value = "8" > GIC Mutual Fund</Option>
+                ''<option value = "49" > Goldman Sachs Mutual Fund</Option>
+                ''<option value = "9" > HDFC Mutual Fund</Option>
+                ''<option value = "37" > HSBC Mutual Fund</Option>
+                ''<option value = "20" > ICICI Prudential Mutual Fund</Option>
+                ''<option value = "57" > IDBI Mutual Fund</Option>
+                ''<option value = "48" > IDFC Mutual Fund</Option>
+                ''<option value = "68" > IIFCL Mutual Fund (IDF)</Option>
+                ''<option value = "62" > IIFL Mutual Fund</Option>
+                ''<option value = "11" > IL&amp;F S Mutual Fund</Option>
+                ''<option value = "65" > IL&amp;FS Mutual Fund (IDF)</Option>
+                ''<option value = "63" > Indiabulls Mutual Fund</Option>
+                ''<option value = "14" > ING Mutual Fund</Option>
+                ''<option value = "16" > JM Financial Mutual Fund</Option>
+                ''<option value = "43" > JPMorgan Mutual Fund</Option>
+                ''<option value = "17" > Kotak Mahindra Mutual Fund</Option>
+                ''<option value = "56" > L&amp;T Mutual Fund</Option>
+                ''<option value = "18" > LIC NOMURA Mutual Fund</Option>
+                ''<option value = "45" > Mirae Asset Mutual Fund</Option>
+                ''<option value = "19" > Morgan Stanley Mutual Fund</Option>
+                ''<option value = "55" > Motilal Oswal Mutual Fund</Option>
+                ''<option value = "54" > Peerless Mutual Fund</Option>
+                ''<option value = "44" > PineBridge Mutual Fund</Option>
+                ''<option value = "34" > PNB Mutual Fund</Option>
+                ''<option value = "64" > PPFAS Mutual Fund</Option>
+                ''<option value = "10" > PRINCIPAL Mutual Fund</Option>
+                ''<option value = "41" > Quantum Mutual Fund</Option>
+                ''<option value = "21" > Reliance Mutual Fund</Option>
+                ''<option value = "42" > Religare Invesco Mutual Fund</Option>
+                ''<option value = "35" > Sahara Mutual Fund</Option>
+                ''<option value = "22" > SBI Mutual Fund</Option>
+                ''<option value = "52" > Shinsei Mutual Fund</Option>
+                ''<option value = "67" > Shriram Mutual Fund</Option>
+                ''<option value = "66" > SREI Mutual Fund (IDF)</Option>
+                ''<option value = "2" > Standard Chartered Mutual Fund</Option>
+                ''<option value = "24" > SUN F&amp;C Mutual Fund</Option>
+                ''<option value = "33" > Sundaram Mutual Fund</Option>
+                ''<option value = "25" > Tata Mutual Fund</Option>
+                ''<option value = "26" > Taurus Mutual Fund</Option>
+                ''<option value = "61" > Union KBC Mutual Fund</Option>
+                ''<option value = "28" > UTI Mutual Fund</Option>
+                ''<option value = "29" > Zurich India Mutual Fund</Option>
+                ''</select>                 
+
+
+                'ServerFile_NameOnly = "NAVHistoryReport" & Format(MyDate, "ddmmyy") & ".txt"
+                'ServerURI_WFileName = "http://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=9&frmdt=" & Format(MyDate, "dd-MMM-YYYY") & "&todt=" & Format(MyDate, "dd-MMM-YYYY")
+
+
+
+
+
 
             Case Else
                 Throw New InvalidCastException
@@ -197,7 +318,7 @@ Public Class Engine
     End Function
 
     Private Function ZipExtracttoFile(strm As MemoryStream, strDestDir As String) As String
-        Dim ExtractedFileName As String = vbEmpty
+        Dim ExtractedFileName As String
         Try
             Using zip As ZipFile = ZipFile.Read(strm)
                 ''ExtractedFileName = zip.EntryFileNames.ToString
