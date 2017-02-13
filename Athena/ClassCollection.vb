@@ -321,7 +321,7 @@ Public Class Engine
         Dim ExtractedFileName As String
         Try
             Using zip As ZipFile = ZipFile.Read(strm)
-                ''ExtractedFileName = zip.EntryFileNames.ToString
+                ExtractedFileName = zip.EntryFileNames.ToString
                 zip.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently
                 For Each e As ZipEntry In zip
                     e.Extract(strDestDir)

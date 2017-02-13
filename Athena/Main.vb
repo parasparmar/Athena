@@ -143,9 +143,6 @@ Public Class FormMain
         GUIUpdater(GUIStage.ResetActivated)
     End Sub
 
-
-
-
     ' Stage 1 : Choose a valid Download Path.
     Private Sub tbDownloadLocation_Click(sender As Object, e As EventArgs) Handles tbDownloadLocation.Click
         ' 0. Request the user to select a folder (MyFolder) where the downloaded files will be kept
@@ -169,12 +166,3 @@ Public Class FormMain
 
 
 End Class
-
-
-
-
-
-
-
-
-

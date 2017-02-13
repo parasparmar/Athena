@@ -29,7 +29,6 @@ Partial Class FormMain
         Me.tsStatusText = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tbDownloadLocation = New System.Windows.Forms.TextBox()
         Me.dtpFromDate = New System.Windows.Forms.DateTimePicker()
-        Me.lblToDate = New System.Windows.Forms.Label()
         Me.lblFromDate = New System.Windows.Forms.Label()
         Me.dtpToDate = New System.Windows.Forms.DateTimePicker()
         Me.clbMarkets = New System.Windows.Forms.CheckedListBox()
@@ -52,10 +51,11 @@ Partial Class FormMain
         'btnDownload
         '
         Me.btnDownload.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.btnDownload.Location = New System.Drawing.Point(114, 197)
+        Me.btnDownload.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDownload.Location = New System.Drawing.Point(233, 149)
         Me.btnDownload.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnDownload.Name = "btnDownload"
-        Me.btnDownload.Size = New System.Drawing.Size(257, 25)
+        Me.btnDownload.Size = New System.Drawing.Size(119, 25)
         Me.btnDownload.TabIndex = 0
         Me.btnDownload.Text = "Download"
         Me.btnDownload.UseVisualStyleBackColor = False
@@ -63,10 +63,11 @@ Partial Class FormMain
         'btnReset
         '
         Me.btnReset.BackColor = System.Drawing.SystemColors.Window
-        Me.btnReset.Location = New System.Drawing.Point(12, 197)
+        Me.btnReset.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReset.Location = New System.Drawing.Point(95, 149)
         Me.btnReset.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.btnReset.Name = "btnReset"
-        Me.btnReset.Size = New System.Drawing.Size(96, 25)
+        Me.btnReset.Size = New System.Drawing.Size(121, 25)
         Me.btnReset.TabIndex = 1
         Me.btnReset.Text = "Reset"
         Me.btnReset.UseVisualStyleBackColor = False
@@ -74,9 +75,9 @@ Partial Class FormMain
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsStatusText})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 390)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 330)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(417, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(362, 22)
         Me.StatusStrip1.TabIndex = 23
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -90,7 +91,8 @@ Partial Class FormMain
         '
         'tbDownloadLocation
         '
-        Me.tbDownloadLocation.Location = New System.Drawing.Point(114, 12)
+        Me.tbDownloadLocation.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbDownloadLocation.Location = New System.Drawing.Point(95, 12)
         Me.tbDownloadLocation.Multiline = True
         Me.tbDownloadLocation.Name = "tbDownloadLocation"
         Me.tbDownloadLocation.Size = New System.Drawing.Size(257, 25)
@@ -98,54 +100,50 @@ Partial Class FormMain
         '
         'dtpFromDate
         '
-        Me.dtpFromDate.Location = New System.Drawing.Point(114, 133)
+        Me.dtpFromDate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpFromDate.Location = New System.Drawing.Point(95, 121)
         Me.dtpFromDate.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.dtpFromDate.Name = "dtpFromDate"
-        Me.dtpFromDate.Size = New System.Drawing.Size(257, 25)
+        Me.dtpFromDate.Size = New System.Drawing.Size(121, 22)
         Me.dtpFromDate.TabIndex = 0
-        '
-        'lblToDate
-        '
-        Me.lblToDate.AutoSize = True
-        Me.lblToDate.Location = New System.Drawing.Point(86, 170)
-        Me.lblToDate.Name = "lblToDate"
-        Me.lblToDate.Size = New System.Drawing.Size(22, 17)
-        Me.lblToDate.TabIndex = 22
-        Me.lblToDate.Text = "To"
         '
         'lblFromDate
         '
         Me.lblFromDate.AutoSize = True
-        Me.lblFromDate.Location = New System.Drawing.Point(70, 137)
+        Me.lblFromDate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblFromDate.Location = New System.Drawing.Point(53, 128)
         Me.lblFromDate.Name = "lblFromDate"
-        Me.lblFromDate.Size = New System.Drawing.Size(38, 17)
+        Me.lblFromDate.Size = New System.Drawing.Size(36, 13)
         Me.lblFromDate.TabIndex = 21
-        Me.lblFromDate.Text = "From"
+        Me.lblFromDate.Text = "Dates"
         '
         'dtpToDate
         '
-        Me.dtpToDate.Location = New System.Drawing.Point(114, 166)
+        Me.dtpToDate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpToDate.Location = New System.Drawing.Point(233, 121)
         Me.dtpToDate.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
         Me.dtpToDate.Name = "dtpToDate"
-        Me.dtpToDate.Size = New System.Drawing.Size(257, 25)
+        Me.dtpToDate.Size = New System.Drawing.Size(119, 22)
         Me.dtpToDate.TabIndex = 1
         '
         'clbMarkets
         '
         Me.clbMarkets.CheckOnClick = True
+        Me.clbMarkets.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.clbMarkets.FormattingEnabled = True
         Me.clbMarkets.Items.AddRange(New Object() {"NSE - Equity", "BSE - Equity", "AMFII - Mutual Funds"})
-        Me.clbMarkets.Location = New System.Drawing.Point(114, 43)
+        Me.clbMarkets.Location = New System.Drawing.Point(95, 43)
         Me.clbMarkets.Name = "clbMarkets"
-        Me.clbMarkets.Size = New System.Drawing.Size(257, 84)
+        Me.clbMarkets.Size = New System.Drawing.Size(257, 72)
         Me.clbMarkets.TabIndex = 0
         '
         'lblDownloadData4Markets
         '
         Me.lblDownloadData4Markets.AutoSize = True
-        Me.lblDownloadData4Markets.Location = New System.Drawing.Point(53, 43)
+        Me.lblDownloadData4Markets.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDownloadData4Markets.Location = New System.Drawing.Point(41, 43)
         Me.lblDownloadData4Markets.Name = "lblDownloadData4Markets"
-        Me.lblDownloadData4Markets.Size = New System.Drawing.Size(55, 17)
+        Me.lblDownloadData4Markets.Size = New System.Drawing.Size(48, 13)
         Me.lblDownloadData4Markets.TabIndex = 23
         Me.lblDownloadData4Markets.Text = "Markets"
         '
@@ -156,19 +154,21 @@ Partial Class FormMain
         'lblDownloadPath
         '
         Me.lblDownloadPath.AutoSize = True
-        Me.lblDownloadPath.Location = New System.Drawing.Point(12, 16)
+        Me.lblDownloadPath.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDownloadPath.Location = New System.Drawing.Point(2, 15)
         Me.lblDownloadPath.Name = "lblDownloadPath"
-        Me.lblDownloadPath.Size = New System.Drawing.Size(96, 17)
+        Me.lblDownloadPath.Size = New System.Drawing.Size(87, 13)
         Me.lblDownloadPath.TabIndex = 36
         Me.lblDownloadPath.Text = "Download Path"
         '
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(79, 228)
+        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox1.Location = New System.Drawing.Point(64, 182)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.CheckBox1.Size = New System.Drawing.Size(50, 21)
+        Me.CheckBox1.Size = New System.Drawing.Size(46, 17)
         Me.CheckBox1.TabIndex = 37
         Me.CheckBox1.Text = "CSV"
         Me.CheckBox1.UseVisualStyleBackColor = True
@@ -176,10 +176,11 @@ Partial Class FormMain
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(73, 290)
+        Me.CheckBox2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox2.Location = New System.Drawing.Point(59, 241)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.CheckBox2.Size = New System.Drawing.Size(56, 21)
+        Me.CheckBox2.Size = New System.Drawing.Size(51, 17)
         Me.CheckBox2.TabIndex = 38
         Me.CheckBox2.Text = "Excel"
         Me.CheckBox2.UseVisualStyleBackColor = True
@@ -187,10 +188,11 @@ Partial Class FormMain
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(42, 321)
+        Me.CheckBox3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox3.Location = New System.Drawing.Point(31, 272)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.CheckBox3.Size = New System.Drawing.Size(87, 21)
+        Me.CheckBox3.Size = New System.Drawing.Size(79, 17)
         Me.CheckBox3.TabIndex = 39
         Me.CheckBox3.Text = "Metastock"
         Me.CheckBox3.UseVisualStyleBackColor = True
@@ -198,61 +200,67 @@ Partial Class FormMain
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(58, 259)
+        Me.CheckBox4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox4.Location = New System.Drawing.Point(45, 210)
         Me.CheckBox4.Name = "CheckBox4"
         Me.CheckBox4.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.CheckBox4.Size = New System.Drawing.Size(71, 21)
+        Me.CheckBox4.Size = New System.Drawing.Size(65, 17)
         Me.CheckBox4.TabIndex = 40
         Me.CheckBox4.Text = "Custom"
         Me.CheckBox4.UseVisualStyleBackColor = True
         '
         'tbCsvPath
         '
-        Me.tbCsvPath.Location = New System.Drawing.Point(135, 226)
+        Me.tbCsvPath.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbCsvPath.Location = New System.Drawing.Point(116, 180)
         Me.tbCsvPath.Name = "tbCsvPath"
-        Me.tbCsvPath.Size = New System.Drawing.Size(236, 25)
+        Me.tbCsvPath.Size = New System.Drawing.Size(236, 22)
         Me.tbCsvPath.TabIndex = 41
         '
         'tbCustomPath
         '
-        Me.tbCustomPath.Location = New System.Drawing.Point(180, 257)
+        Me.tbCustomPath.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbCustomPath.Location = New System.Drawing.Point(168, 208)
         Me.tbCustomPath.Name = "tbCustomPath"
-        Me.tbCustomPath.Size = New System.Drawing.Size(191, 25)
+        Me.tbCustomPath.Size = New System.Drawing.Size(184, 22)
         Me.tbCustomPath.TabIndex = 42
         '
         'tbExcelPath
         '
-        Me.tbExcelPath.Location = New System.Drawing.Point(135, 288)
+        Me.tbExcelPath.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbExcelPath.Location = New System.Drawing.Point(116, 239)
         Me.tbExcelPath.Name = "tbExcelPath"
-        Me.tbExcelPath.Size = New System.Drawing.Size(236, 25)
+        Me.tbExcelPath.Size = New System.Drawing.Size(236, 22)
         Me.tbExcelPath.TabIndex = 43
         '
         'tbMetastockPath
         '
-        Me.tbMetastockPath.Location = New System.Drawing.Point(135, 319)
+        Me.tbMetastockPath.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbMetastockPath.Location = New System.Drawing.Point(116, 270)
         Me.tbMetastockPath.Name = "tbMetastockPath"
-        Me.tbMetastockPath.Size = New System.Drawing.Size(236, 25)
+        Me.tbMetastockPath.Size = New System.Drawing.Size(236, 22)
         Me.tbMetastockPath.TabIndex = 44
         '
         'tbCustomDelimiter
         '
-        Me.tbCustomDelimiter.Location = New System.Drawing.Point(135, 257)
+        Me.tbCustomDelimiter.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbCustomDelimiter.Location = New System.Drawing.Point(116, 208)
         Me.tbCustomDelimiter.Name = "tbCustomDelimiter"
-        Me.tbCustomDelimiter.Size = New System.Drawing.Size(39, 25)
+        Me.tbCustomDelimiter.Size = New System.Drawing.Size(46, 22)
         Me.tbCustomDelimiter.TabIndex = 45
         '
         'tsProgressBar1
         '
-        Me.tsProgressBar1.Location = New System.Drawing.Point(12, 351)
+        Me.tsProgressBar1.Location = New System.Drawing.Point(116, 298)
         Me.tsProgressBar1.Name = "tsProgressBar1"
-        Me.tsProgressBar1.Size = New System.Drawing.Size(359, 23)
+        Me.tsProgressBar1.Size = New System.Drawing.Size(236, 22)
         Me.tsProgressBar1.TabIndex = 46
         '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(417, 412)
+        Me.ClientSize = New System.Drawing.Size(362, 352)
         Me.Controls.Add(Me.tsProgressBar1)
         Me.Controls.Add(Me.tbCustomDelimiter)
         Me.Controls.Add(Me.tbMetastockPath)
@@ -268,7 +276,6 @@ Partial Class FormMain
         Me.Controls.Add(Me.clbMarkets)
         Me.Controls.Add(Me.lblDownloadData4Markets)
         Me.Controls.Add(Me.dtpFromDate)
-        Me.Controls.Add(Me.lblToDate)
         Me.Controls.Add(Me.lblFromDate)
         Me.Controls.Add(Me.btnReset)
         Me.Controls.Add(Me.dtpToDate)
@@ -291,7 +298,6 @@ Partial Class FormMain
     Friend WithEvents tsStatusText As ToolStripStatusLabel
     Friend WithEvents tbDownloadLocation As TextBox
     Friend WithEvents dtpFromDate As DateTimePicker
-    Friend WithEvents lblToDate As Label
     Friend WithEvents lblFromDate As Label
     Friend WithEvents dtpToDate As DateTimePicker
     Friend WithEvents clbMarkets As CheckedListBox
