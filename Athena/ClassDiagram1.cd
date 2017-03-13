@@ -1,23 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Athena.My.MyApplication">
-    <Position X="3.25" Y="0.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ApplicationEvents.vb</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Athena.My.MySettings">
-    <Position X="7.5" Y="0.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAACAAQAABEAAAAABAABAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Athena.FormMain">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
@@ -28,7 +15,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IDSAEUAAMSkAEgBAJgGQEAIDABFAMAoAYEACAAAEAAA=</HashCode>
+      <HashCode>ITQAEUAAASMAEABgIgCAIAIHIBBAAAgAQBACAAAAAAA=</HashCode>
       <FileName>Main.vb</FileName>
     </TypeIdentifier>
   </Class>
@@ -49,17 +36,5 @@
       <FileName>ClassCollection.vb</FileName>
     </TypeIdentifier>
   </Class>
-  <Module Name="Athena.My.MySettingsProperty">
-    <Position X="3.25" Y="5.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Module>
-  <Module Name="Athena.My.Resources.Resources">
-    <Position X="3.25" Y="2.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Module>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

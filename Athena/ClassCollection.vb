@@ -43,8 +43,8 @@ Public Class Engine
     ''' Task is a data structure that tracks information, Defines the needed information that the engine class tracks to initiate, complete a successful download and deflate the received file. 
     ''' </summary>
     Structure Task
-        '' 0. This_Date = The date component of the associated downloaded file.
-        Dim This_Date As Date
+        '' 0. MyDate = The date component of the associated downloaded file.
+        Dim MyDate As Date
         '' 1. ServerURI_WFileName = The complete download path and file name
         Dim ServerURI_WFileName As String
         '' 2. ServerFile_NameOnly = Only the file name of the downloaded file. It will be concatenated with fbdDownloadLocation.SelectedPath to acheive the full path and file name of the local file.
@@ -72,7 +72,7 @@ Public Class Engine
     End Function
 
 
-    Private Function createTask(ByVal MyMarketsType As String, MyDate As Date) As Task
+    Private Function createTask(ByVal MarketsType As String, TheDate As Date) As Task
         '' The NSE Equity URL is of the format http://www.nseindia.com/content/historical/EQUITIES/<YYYY>/<MMM>/cm<dd><MMM><YYYY>bhav.csv.zip
         '' for eg : http://www.nseindia.com/content/historical/EQUITIES/2014/JUL/cm31JUL2014bhav.csv.zip is a bhav copy for 31/Jul/2014
         '' MyMarketsType A string consisting of a limited choice of available Markets and Instruments.
@@ -81,14 +81,14 @@ Public Class Engine
         Dim ServerFile_NameOnly As String
         Dim ServerURI_WFileName As String
         Dim currentTask As New Task
-        Select Case MyMarketsType
+        Select Case MarketsType
             Case "NSE - Equity"
                 '' Status : In Production 09-08-2014 13.20
                 '' This function takes in a datearray  and returns a dictionary of filenames and urls from which to download individual files. 
                 '' The target URL is of the format http://www.nseindia.com/content/historical/EQUITIES/<YYYY>/<MMM>/cm<dd><MMM><yyyy>bhav.csv.zip
                 '' for eg : http://www.nseindia.com/content/historical/EQUITIES/2014/JUL/cm31JUL2014bhav.csv.zip is a bhav copy for 31/Jul/2014
-                ServerFile_NameOnly = "cm" & Format(MyDate, "dd").ToUpper.ToString & Format(MyDate, "MMM").ToUpper.ToString & Format(MyDate, "yyyy").ToUpper.ToString & "bhav.csv.zip"
-                ServerURI_WFileName = "http://www.nseindia.com/content/historical/EQUITIES/" & MyDate.Year.ToString & "/" & Format(MyDate, "MMM").ToUpper.ToString & "/" & ServerFile_NameOnly
+                ServerFile_NameOnly = "cm" & Format(TheDate, "dd").ToUpper.ToString & Format(TheDate, "MMM").ToUpper.ToString & Format(TheDate, "yyyy").ToUpper.ToString & "bhav.csv.zip"
+                ServerURI_WFileName = "http://www.nseindia.com/content/historical/EQUITIES/" & TheDate.Year.ToString & "/" & Format(TheDate, "MMM").ToUpper.ToString & "/" & ServerFile_NameOnly
 
             Case "BSE - Equity"
                 '' BSE India Bhav Copy http://www.bseindia.com/download/BhavCopy/Equity/EQ141015_CSV.ZIP
@@ -97,7 +97,7 @@ Public Class Engine
                 '' Equities http://www.bseindia.com/download/BhavCopy/Equity/EQ180814_CSV.ZIP
                 '' BSE India Bhav Copy http://www.bseindia.com/download/BhavCopy/Equity/EQ141015_CSV.ZIP
 
-                ServerFile_NameOnly = "EQ" & Format(MyDate, "dd").ToUpper.ToString & Format(MyDate, "MM").ToUpper.ToString & Format(MyDate, "yy").ToUpper.ToString & "_CSV.zip"
+                ServerFile_NameOnly = "EQ" & Format(TheDate, "dd").ToUpper.ToString & Format(TheDate, "MM").ToUpper.ToString & Format(TheDate, "yy").ToUpper.ToString & "_CSV.zip"
                 ServerURI_WFileName = "http://www.bseindia.com/download/BhavCopy/Equity/" & ServerFile_NameOnly
             Case "AMFII - Mutual Funds"
 
@@ -221,16 +221,16 @@ Public Class Engine
         End Select
 
         '' 0. onDate = The date component of the associated downloaded file.
-        currentTask.This_Date = MyDate.Date
+        currentTask.MyDate = TheDate.Date
         '' 1. ServerURI_WFileName = The complete download path and file name
         currentTask.ServerURI_WFileName = ServerURI_WFileName
         '' 2. ServerFile_NameOnly = Only the file name of the downloaded file. It will be concatenated with fbdDownloadLocation.SelectedPath to acheive the 
         '' full path and file name of the local file.
         currentTask.ServerFile_NameOnly = ServerFile_NameOnly
         '' 3. LocalFile_NameOnly = The eventually Deflated(unzipped) file name.
-        currentTask.LocalDeflatedFile_NameOnly = Format(MyDate, "yyyyMMdd") & ".csv"
+        currentTask.LocalDeflatedFile_NameOnly = Format(TheDate, "yyyyMMdd") & ".csv"
         '' 4. MktBasedDownloadSubPath = The individual path to which each Market's file should be downloaded to.
-        currentTask.MktBasedDownloadSubPath = MyMarketsType
+        currentTask.MktBasedDownloadSubPath = MarketsType
         Return currentTask
     End Function
 
@@ -338,6 +338,9 @@ Public Class Engine
 
 End Class
 
+Public Class Task
+End Class
+
 
 
 '' Headers to give the webclient
@@ -355,3 +358,4 @@ End Class
 ''--------------Cookies----------------------
 ''DNT: 1
 ''--------------Cookies--------------------
+
