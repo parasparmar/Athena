@@ -156,3 +156,5 @@ $RECYCLE.BIN/
 .DS_Store
 /packages/DotNetZip.1.13.8
 /.vs
+/packages/DotNetZip.1.16.0
+/Athena/.vs
